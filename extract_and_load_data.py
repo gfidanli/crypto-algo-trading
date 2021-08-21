@@ -29,7 +29,19 @@ currency_ids = []
 for currency in currencies:
     currency_ids.append(currency['id'])
 
-# Check latest 
+# ========================
+#     Database Set-up
+# ========================
+
+# Create connection
+conn = sqlite3.connect('db/crypto-analysis.db')
+c = conn.cursor()
+
+# Drop Tables
+c.execute('''DROP TABLE IF EXISTS coinbase''')
+c.execute('''DROP TABLE IF EXISTS lunarCrush''')
+
+conn.commit()
 
 # ========================
 # CoinbasePro Data Extract
@@ -102,8 +114,8 @@ data = {
     'close':close,
     'volume':volume
 }
-pd.DataFrame(data).to_csv('/Volumes/develop/projects/crypto-analysis/output/cbpro_data.csv', index=False)
-print("CoinbasePro data saved as output/cbpro_data.csv")
+pd.DataFrame(data).to_sql('coinbase', conn, if_exists='replace', index=False)
+print("CoinbasePro data saved to database.")
 
 # =======================
 # LunarCrush Data Extract
@@ -162,25 +174,13 @@ for symbol in currency_ids:
             
 df = pd.DataFrame(asset_list)
 df.rename(columns={'asset_id':'symbol'},inplace=True)
-df.to_csv('/Volumes/develop/projects/crypto-analysis/output/lunarCrush_data.csv', index=False)
-print("lunarCrush data saved as output/lunarCrush_data.csv")
+df.to_sql('lunarCrush', conn, if_exists='replace', index=False)
+print("lunarCrush data saved to database.")
 
 # ========================
-# Load Data into Sqlite DB
+#    Test Database Load
 # ========================
 
-conn = sqlite3.connect('db/crypto-analysis.db')
-c = conn.cursor()
-
-# Load the data into a Pandas DataFrame
-lunarCrush = pd.read_csv('./output/lunarCrush_data.csv')
-coinbase = pd.read_csv('./output/cbpro_data.csv')
-
-# Write the data to a sqlite table
-lunarCrush.to_sql('lunarCrush', conn, if_exists='replace', index = False)
-coinbase.to_sql('coinbase', conn, if_exists='replace', index = False)
-
-# Check tables
-print("Data loaded into Sqlite DB:")
+print("Confirm data loaded into Sqlite DB:")
 print(pd.read_sql('''SELECT * FROM lunarCrush''', conn).head())
 print(pd.read_sql('''SELECT * FROM coinbase''', conn).tail())
