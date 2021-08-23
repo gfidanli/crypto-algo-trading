@@ -8,9 +8,9 @@ conn = sqlite3.connect('db/crypto-analysis.db')
 c = conn.cursor()
 
 # Get parameters
-symbol = 'BTC' #input("Enter a cryptocurrency symbol: ")
-start_input = '2017-01-01' #input("Enter start date in format yyyy-mm-dd: ")
-end_input = '2021-08-15' #input("Enter end date in format yyyy-mm-dd: ")
+symbol = input("Enter a cryptocurrency symbol: ")
+start_input = input("Enter start date in format yyyy-mm-dd: ")
+end_input = input("Enter end date in format yyyy-mm-dd: ")
 
 # Start needs to be adjusted to pull enough data for the EMA calculation
 start = datetime.strptime(start_input,'%Y-%m-%d') - timedelta(days=365)
@@ -82,7 +82,7 @@ for combo in combos:
         index_loc = df.index.get_loc(i)
         prev_index_val = df.iloc[index_loc - 1]
         
-        close = df["close"][i] # Close at the point of trade signal
+        close = df["close"][i]
 
         if(df[f"EMA_{fast}"][i] > df[f"EMA_{slow}"][i]):
             
@@ -92,7 +92,7 @@ for combo in combos:
                 if((df.iloc[index_loc-1][f"EMA_{fast}"])<(df.iloc[index_loc-1][f"EMA_{slow}"])): 
 
                     in_position_flag = 1
-                    buy_price = close # Buy price is at closing price
+                    buy_price = close
 
                     # Output Data
                     dates.append([i])
@@ -108,7 +108,7 @@ for combo in combos:
                 in_position_flag=0
                 sell_price=close
 
-                percent_change = (sell_price/buy_price - 1)*100
+                percent_change = (sell_price / buy_price - 1) * 100
 
                 # Output Data
                 dates.append([i])
@@ -119,11 +119,12 @@ for combo in combos:
                 sell_prices.append(sell_price)
                 percent_changes.append(percent_change)
 
-        if((counter == len(dates_to_use) - 1) and (in_position_flag == 1)): # check if iterator is at the last row of the dataset and there is a position open
+        # Check if last row of the dataset and close position if so
+        if((counter == len(dates_to_use) - 1) and (in_position_flag == 1)): 
             in_position_flag = 0
             sell_price = close
 
-            percent_change = (sell_price/buy_price - 1)*100
+            percent_change = (sell_price / buy_price - 1) * 100
             
             # Save Trade Data
             dates.append([i])
@@ -134,7 +135,7 @@ for combo in combos:
             sell_prices.append(sell_price)
             percent_changes.append(percent_change)
         
-        counter+=1
+        counter += 1
     
     # Write out trade history for each ema-crossover strategy
     trade_history = {
