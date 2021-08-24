@@ -52,18 +52,22 @@ A collection of scripts that combine historical price data from Coinbase with co
 
 # Installation
 * Clone this repo to your computer.
-* Install the requirements using `pip install -r requirements.txt`.
-    * Make sure to use Python 3.
+* It is **highly** recommended to create a python virtual environment. A good tutorial can be found [here](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment).  
+* Install the requirements using `pip3 install -r requirements.txt`.
+    * Make sure to use Python 3 and activate your virtual environment if you decided to create one.
+* If you want to experiment with social data available in the lunarCRUSH API you will need to obtain an API key [here](https://lunarcrush.com/developers/docs). This is **not required** in the current version of the project and the ETL code related to lunarCRUSH has been commented out.
+* Set working directory to `etl` and run `extract and load_data.py` to load historical prices from Coinbase.
 <br/><br/>
 
 # Usage
 There are two ways you can use this repo:
-1. Run `extract_and_load_data.py` to obtain a dataset of historical price data from coinbase.
+1. Run `extract_and_load_data.py` to obtain a dataset of historical price data from Coinbase.
+   * Note: Each row contains the daily [OHLC](https://www.investopedia.com/terms/o/ohlcchart.asp) (Open, High, Low, Close) for each cryptocurrency for every day it was available to trade on Coinbase. Daily price data is locked as of 00:00 GMT. If you run the ETL code before 00:00 GMT you will get a row for that day but the values may change until 00:00 GMT.
 2. Using historical price data, run [trading strategies](#trading-strategies) found in `/trading_strategies/*strategy`
 <br/><br/>
 
 # ETL
-The backbone of this project is the ETL (Extract, Transform, Load) process that currently utilizes (2) public APIs to obtain historical data for various cryptocurrencies. I decided to use coinbase data because the API is easy to use (with Python wrapper) and it's my preferred service for trading crypto.
+The backbone of this project is the ETL (Extract, Transform, Load) process that currently utilizes (2) public APIs to obtain historical data for various cryptocurrencies. I decided to use Coinbase data because the API is easy to use (with Python wrapper) and it's my preferred service for trading crypto.
 
 Since Bitcoin is the "grandfather" of modern cryptocurrency, I decided to use it's historic trading availability as the start date for this data pull. After doing some research, I found out that it was listed on Coinbase Pro (at the time GDRX) in 2015 so I decided on `2015-01-01` as the start date. End date would be the current day as determined by the value of `datetime.now()`.
 
