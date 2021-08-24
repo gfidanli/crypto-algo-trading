@@ -4,7 +4,7 @@ import itertools
 import sqlite3
 
 # Create db connection
-conn = sqlite3.connect('db/crypto-analysis.db')
+conn = sqlite3.connect('../db/crypto-analysis.db')
 c = conn.cursor()
 
 # Get parameters
@@ -59,6 +59,22 @@ max_returns = []
 max_losses = []
 cumulative_returns = []
 
+dates_to_use = df.loc[start_input:end_input].index
+
+# Show results of just buying and holding (HODL)
+start_open = df.loc[[start_input]]['open'].item()
+end_close = df.loc[[end_input]]['close'].item()
+hodl_return = round(((end_close - start_open) / (start_open)) * 100, 2)
+
+print("")
+print("=======================")
+print("    Results if HODL    ")
+print("=======================")
+print(f"Open Price at {start_input}: {start_open}")
+print(f"Close Price at {end_input}: {end_close}")
+print(f"Percent Return if HODL: {hodl_return}")
+print("")
+
 for combo in combos:
     fast = str(combo[0])
     slow = str(combo[1])
@@ -73,8 +89,6 @@ for combo in combos:
     slow_ema_values = []
     sell_prices = []
     percent_changes = []
-
-    dates_to_use = df.loc[start_input:end_input].index
 
     for i in dates_to_use:
 
@@ -147,7 +161,8 @@ for combo in combos:
         'sell_price':sell_prices,
         'percent_change':percent_changes
     }
-    pd.DataFrame(trade_history).to_csv(f"./output/ema_cross_{combo[0]}_{combo[1]}.csv", index=False)
+    # Output trade history
+    # pd.DataFrame(trade_history).to_csv(f"../output/ema_cross_{combo[0]}_{combo[1]}.csv", index=False)
 
     # Analyze Results
     win_sum = 0
@@ -160,7 +175,7 @@ for combo in combos:
         if (i > 0):
             win_sum += i
             number_of_wins += 1
-        else:
+        elif (i < 0):
             loss_sum += i
             number_of_losses += 1
         
@@ -217,6 +232,9 @@ trade_stats = {
     'Cum Return':cumulative_returns
 }
 output_table = pd.DataFrame(data=trade_stats,index=combos).sort_values('Cum Return', ascending=False)
+print("=======================")
+print("     Trade Results     ")
+print("=======================")
 print(output_table)
 
 # output_table.to_csv(f"../output/backtesting_strategies_EMA_cross_output_{stock}.csv", mode='w', header=True, index=True)
