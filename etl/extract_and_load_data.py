@@ -6,7 +6,9 @@ import urllib.request
 import json
 import time
 import sqlite3
+import sys
 
+sys.path.insert(1, '../inputs/')
 from apis import lunarCrush_API
 
 # Make using PublicClient Methods easier
@@ -34,7 +36,7 @@ for currency in currencies:
 # ========================
 
 # Create connection
-conn = sqlite3.connect('db/crypto-analysis.db')
+conn = sqlite3.connect('../db/crypto-analysis.db')
 c = conn.cursor()
 
 # Drop Tables
