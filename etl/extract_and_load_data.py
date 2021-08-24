@@ -8,8 +8,8 @@ import time
 import sqlite3
 import sys
 
-sys.path.insert(1, '../inputs/')
-from apis import lunarCrush_API
+# sys.path.insert(1, '../inputs/')
+# from apis import lunarCrush_API
 
 # Make using PublicClient Methods easier
 public_client = cbpro.PublicClient()
@@ -123,66 +123,72 @@ print("CoinbasePro data saved to database.")
 # LunarCrush Data Extract
 # =======================
 
-# For each asset, get the timeseries information and create one dataframe
-asset_list = []
-today = datetime.now()
+# # For each asset, get the timeseries information and create one dataframe
+# asset_list = []
+# today = datetime.now()
 
-# API Call params
-params = {
-    'site':"https://api.lunarcrush.com/v2?",
-    'endpoint':'assets',
-    'interval':'day',
-    'start':'2015-01-01',
-    'data_points':300, # Set to match coinbase pro API, max is 720
-}
+# # API Call params
+# params = {
+#     'site':"https://api.lunarcrush.com/v2?",
+#     'endpoint':'assets',
+#     'interval':'day',
+#     'start':'2015-01-01',
+#     'data_points':300, # Set to match coinbase pro API, max is 720
+# }
 
-print("Extracting lunarCrush data...")
-for symbol in currency_ids:
-    # print(symbol)
-    start_date = datetime.strptime(params['start'],'%Y-%m-%d')
+# print("Extracting lunarCrush data...")
+# for symbol in currency_ids:
+#     # print(symbol)
+#     start_date = datetime.strptime(params['start'],'%Y-%m-%d')
 
-    while start_date <= today:
+#     while start_date <= today:
 
-        end_date = get_end_date(start_date,params['data_points'])
+#         end_date = get_end_date(start_date,params['data_points'])
 
-        # Adjust for end_date being in the future
-        if end_date > today:
-            end_date = today
+#         # Adjust for end_date being in the future
+#         if end_date > today:
+#             end_date = today
 
-        try:
+#         try:
 
-            # Perform API Call
-            start = "2015-01-01" # UNIX timestamp .timestamp()
-            end = ""
-            url = f"{params['site']}data={params['endpoint']}&key={lunarCrush_API}&symbol={symbol}&interval={params['interval']}&start={time.mktime(start_date.timetuple())}&end={time.mktime(end_date.timetuple())}&data_points={params['data_points']}"
+#             # Perform API Call
+#             start = "2015-01-01" # UNIX timestamp .timestamp()
+#             end = ""
+#             url = f"{params['site']}data={params['endpoint']}&key={lunarCrush_API}&symbol={symbol}&interval={params['interval']}&start={time.mktime(start_date.timetuple())}&end={time.mktime(end_date.timetuple())}&data_points={params['data_points']}"
 
-            assets = json.loads(urllib.request.urlopen(url).read())
+#             assets = json.loads(urllib.request.urlopen(url).read())
 
-            for asset_data in assets['data']:
+#             for asset_data in assets['data']:
                 
-                for time_data in asset_data['timeSeries']:
+#                 for time_data in asset_data['timeSeries']:
                     
-                    # Clean-up
-                    time_data['asset_id'] = asset_data['symbol']
-                    time_data['time'] = datetime.fromtimestamp(time_data['time'])
+#                     # Clean-up
+#                     time_data['asset_id'] = asset_data['symbol']
+#                     time_data['time'] = datetime.fromtimestamp(time_data['time'])
                     
-                    asset_list.append(time_data)
+#                     asset_list.append(time_data)
         
-        except Exception as e:
-            print(f"Symbol: {symbol}; {e}")
+#         except Exception as e:
+#             print(f"Symbol: {symbol}; {e}")
         
-        # Calculate new start date to use
-        start_date = end_date + timedelta(days=1)
+#         # Calculate new start date to use
+#         start_date = end_date + timedelta(days=1)
             
-df = pd.DataFrame(asset_list)
-df.rename(columns={'asset_id':'symbol'},inplace=True)
-df.to_sql('lunarCrush', conn, if_exists='replace', index=False)
-print("lunarCrush data saved to database.")
+# df = pd.DataFrame(asset_list)
+# df.rename(columns={'asset_id':'symbol'},inplace=True)
+# df.to_sql('lunarCrush', conn, if_exists='replace', index=False)
+# print("lunarCrush data saved to database.")
 
 # ========================
 #    Test Database Load
 # ========================
 
 print("Confirm data loaded into Sqlite DB:")
-print(pd.read_sql('''SELECT * FROM lunarCrush''', conn).head())
-print(pd.read_sql('''SELECT * FROM coinbase''', conn).tail())
+# print(pd.read_sql('''SELECT * FROM lunarCrush''', conn).head())
+print(pd.read_sql(
+    '''
+    SELECT * 
+    FROM coinbase
+    GROUP BY symbol, date
+    ORDER BY symbol, date
+    ''', conn).tail())
