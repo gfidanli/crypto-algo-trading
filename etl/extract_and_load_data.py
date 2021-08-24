@@ -35,6 +35,10 @@ for currency in currencies:
 #     Database Set-up
 # ========================
 
+# Create folder for the database file, give full permissions
+import os
+os.system("mkdir -m 777 db")
+
 # Create connection
 conn = sqlite3.connect('../db/crypto-analysis.db')
 c = conn.cursor()
