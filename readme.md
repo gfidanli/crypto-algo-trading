@@ -29,7 +29,7 @@
 </p>
 <hr>
 
-A collection of scripts that combine historical price data from Coinbase with community/social data from LunarCRUSH to create a unique database that can be used to research different trading strategies (or algorithms) and code up screeners. Could we take a traditional EMA-crossover strategy and supplement with the moving average of the past 5 days of raw influencer mentions? This project aims to find out.
+A collection of scripts that combine historical price data from Coinbase Pro with community/social data from LunarCRUSH to create a unique database that can be used to research different trading strategies (or algorithms) and code up screeners. Could we take a traditional EMA-crossover strategy and supplement with the moving average of the past 5 days of raw influencer mentions? This project aims to find out.
 <br/><br/>
 # Table of Contents
 - [Table of Contents](#table-of-contents)
@@ -37,7 +37,7 @@ A collection of scripts that combine historical price data from Coinbase with co
 - [Usage](#usage)
 - [ETL](#etl)
   - [Extract](#extract)
-    - [Coinbase](#coinbase)
+    - [Coinbase Pro](#coinbase-pro)
     - [LunarCRUSH](#lunarcrush)
   - [Transform](#transform)
   - [Load](#load)
@@ -67,13 +67,13 @@ There are two ways you can use this repo:
 <br/><br/>
 
 # ETL
-The backbone of this project is the ETL (Extract, Transform, Load) process that currently utilizes (2) public APIs to obtain historical data for various cryptocurrencies. I decided to use Coinbase data because the API is easy to use (with Python wrapper) and it's my preferred service for trading crypto.
+The backbone of this project is the ETL (Extract, Transform, Load) process that currently utilizes two (2) public APIs to obtain historical data for various cryptocurrencies. I decided to use Coinbase Pro data because the API is easy to use (with Python wrapper) and it's my preferred service for trading crypto.
 
 Since Bitcoin is the "grandfather" of modern cryptocurrency, I decided to use it's historic trading availability as the start date for this data pull. After doing some research, I found out that it was listed on Coinbase Pro (at the time GDRX) in 2015 so I decided on `2015-01-01` as the start date. End date would be the current day as determined by the value of `datetime.now()`.
 
 ## Extract
 
-### Coinbase
+### Coinbase Pro
 * Get all cryptocurrencies available using `get_currencies` endpoint
 * For each cryptocurrency, utilize `get_product_historic_rates` endpoint
   * Note: there are a few currencies that do not have historic rates available. These were skipped when pulling the data from the API
@@ -139,5 +139,12 @@ Below is an example of a ADA trade looking at two periods where price is very fa
 # Future Updates
 This project is still very much a work in progress and I will be adding to it over time as I come across new trading strategies/ideas and build out my edge in the markets. I still haven't even touched the social data aspect I was able to grab from the lunarCRUSH API. Stay tuned for that.
 
+* Add functionality to add missing timeseries data to the existing database once set up, rather than recreate the database everytime
+* Flesh out notebooks to provide more background and analysis on the various strategies and screeners available
+* Create a notebook to showcase SQL analysis of the raw data
+
 # Resources
+* [Coinbase Pro API](https://docs.pro.coinbase.com)
+* [Coinbase Pro API Python Wrapper](https://github.com/danpaquin/coinbasepro-python)
+* [LunarCRUSH API](https://lunarcrush.com/developers/docs)
 * Richard Moglen's excellent [Python for Finance] playlist(https://www.youtube.com/watch?v=myFD0np9eys&list=PLPfme2mwsQ1FQhH1icKEfiYdLSUHE-Wo5) on Youtube. The skeleton of the ema crossover script came from him and I added to it.
