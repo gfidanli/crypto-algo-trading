@@ -91,17 +91,24 @@ for c in currency_ids:
         )
 
         # Handle case where there is no data available
-        # Return from API will be in dict format if no data is availble
+        # Return from API call will be in dict format if no data is availble
         if type(historic_rates) is not dict: 
             try:
+
                 for day in historic_rates:
+                    
+                    # Date from timestamp needs to be adjusted to reflect actual value
+                    date_clean = datetime.fromtimestamp(day[0]) + timedelta(days=1)
+                    date_clean = datetime.strftime(date_clean,'%Y-%m-%d')
+
                     symbol.append(c)
-                    dates.append((datetime.fromtimestamp(day[0]) + timedelta(days=1)))
+                    dates.append(date_clean)
                     low.append(day[1])
                     high.append(day[2])
                     opn.append(day[3])
                     close.append(day[4])
                     volume.append(day[5])
+            
             except Exception as e:
                 print('c')
                 print(day[0])

@@ -20,7 +20,7 @@ df = pd.read_sql(f"""
     SELECT * 
     FROM coinbase 
     WHERE symbol = '{symbol}' AND
-    date BETWEEN '{start} 19:00:00' AND '{end_input} 19:00:00'
+    date BETWEEN '{start}' AND '{end_input}'
     """, conn
 )
 
