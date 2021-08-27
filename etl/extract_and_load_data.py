@@ -203,3 +203,5 @@ print(pd.read_sql(
     GROUP BY symbol, date
     ORDER BY symbol, date
     ''', conn).tail())
+
+conn.close()
