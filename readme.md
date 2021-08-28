@@ -21,9 +21,9 @@
     <img alt="ESLint" src="https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat-square">
   </a>
 
-  <a href="https://github.com/crypto-algo-trading/crypto-algo-trading/blob/master/LICENSE" target="_blank">
+  <a href="https://github.com/gfidanli/crypto-algo-trading/blob/master/LICENSE" target="_blank">
     <img alt="LICENSE" src="https://img.shields.io/github/license/gfidanli/crypto-algo-trading?style=flat-square&color=yellow">
-  <a/>
+  </a>
 
   </a>
 </p>
