@@ -47,6 +47,8 @@ A collection of scripts that combine historical price data from Coinbase Pro wit
     - [Example Results](#example-results)
 - [Trading Screeners](#trading-screeners)
   - [Mean Reversion](#mean-reversion)
+    - [How to Use](#how-to-use-1)
+    - [Example Results](#example-results-1)
 - [Future Updates](#future-updates)
 - [Resources](#resources)
 
@@ -62,8 +64,9 @@ A collection of scripts that combine historical price data from Coinbase Pro wit
 # Usage
 There are two ways you can use this repo:
 1. Run `extract_and_load_data.py` to obtain a dataset of historical price data from Coinbase.
-   * Note: Each row contains the daily [OHLC](https://www.investopedia.com/terms/o/ohlcchart.asp) (Open, High, Low, Close) for each cryptocurrency for every day it was available to trade on Coinbase. Daily price data is locked as of 00:00 GMT. If you run the ETL code before 00:00 GMT you will get a row for that day but the values may change until 00:00 GMT.
-2. Using historical price data, run [trading strategies](#trading-strategies) found in `/trading_strategies/*strategy`
+   * Note: Each row contains the **daily** [OHLC](https://www.investopedia.com/terms/o/ohlcchart.asp) (Open, High, Low, Close) for each cryptocurrency for every day it was available to trade on Coinbase. Daily price data is locked as of 00:00 GMT. If you run the ETL code before 00:00 GMT you will get a row for that day but the values may change until 00:00 GMT.
+2. Using historical price data, run [trading strategies](#trading-strategies) found in `/trading_strategies/*strategy*`
+3. Using historical price data, run [screeners](#trading-screeners) found in `/trading_strategies/*screener*`
 <br/><br/>
 
 # ETL
@@ -111,18 +114,19 @@ Below is an example of a BTC trade using the 8 and 21 Day EMAs. Sometimes you ca
 <br></br>
 ![alt text](https://www.tradingview.com/x/3vM7BpnT/)
 ### How to Use
-* Run `/trading_strategies/ema_crossover_strategy` using the dataset from `/etl/extract_and_load_data.py`
+* Run `/trading_strategies/ema_crossover_strategy.py` using the dataset from `/etl/extract_and_load_data.py`
   * The dataset needs to be in DataFrame format
 ### Example Results
 ![](./images/example_ema_cross_results_BTC.png)
 <br></br>
 
 ![](./images/example_ema_cross_results_ETH.png)
-<br></br>
+
 
 Surprisingly, we were able to almost **double** our returns on BTC compared to a buy-and-hold (or [HODL-ing]("https://www.investopedia.com/terms/h/hodl.asp")) strategy through the bear market after the 2017 bull-run.
 
 Even more shocking are the ETH results. A crossover strategy was able to return 303,520% compared to a paltry 39,623% when HODL-ing. That's remarkable! Also fishy...after doing some digging it was apparent that we ended up getting lucky and catching a move from $8.38 to $263.12. A return of 3,039%. But was it luck or the power of following a trend until it is likely to reverse? I intend to do a study where I take random 6-month timeframes and compare the crossover strategy to buy-and-hold. On average, I expect the trading strategy to be profitable but have lower returns to holding.
+<br></br>
 
 # Trading Screeners
 
@@ -131,9 +135,27 @@ The mean reversion screener is a way to add some confidence to a potential trade
 
 This idea works great in crypto because coins tend to run up in huge moves after long periods of consolidation. This happens in cycles. Given enough data points, we can reliably buy or sell once the asset reaches an extreme standard deviation (e.g. 3+).
 
-Below is an example of a ADA trade looking at two periods where price is very far from it's 50 Day MA. Could we see another large correction? If we bought on the cross of the 8 Day EMA over the 21 Day EMA it might be a good time to sell some of our position and **lock in profit**. As they say, history doesn't repeat but it does rhyme...
+Below is an example of an ADA trade looking at two periods where price is very far from it's 50 Day MA. Could we see another large correction? If we bought on the cross of the 8 Day EMA over the 21 Day EMA it might be a good time to sell some of our position and **lock in profit**. As they say, history doesn't repeat but it does rhyme...
 <br></br>
 ![alt text](https://www.tradingview.com/x/CV417Eki/)
+### How to Use
+* Run `/trading_screeners/mean_reversion_screener.py` using the dataset from `/etl/extract_and_load_data.py`
+  * The dataset needs to be in DataFrame format
+### Example Results
+![](./images/example_overbought_change.png)
+<br></br>
+We can see above that at the apex of the bull market in 2017 (December 17th, 2017) BTC closing price was approx. 90% higher than it's 50 day moving average which we can consider its "mean" price. Assuming the distribution of percentage change between closing price of BTC and the 50 day moving average is *normal*, then at 90% or 4.24 standard deviations above the mean, this is an event that may have happened just a few times in the history of BTC. Therefore this would be a great time to **take some profit**.
+
+If we did decide to take profit we were handsomely rewarded as just three days later BTC was trading at 16,496.89 or ~15% lower. In fact, December 17th ended up being the top for that bull market and BTC would trade lower than 20,000 until late 2020.
+
+This screener can also show great times to buy crypto as well. Take the March 12th, 2020 COVID-19 crash. All markets were dropping due to the uncertainty around COVID-19 and crypto was no exception:
+<br></br>
+![](./images/example_mean_reversion_oversold.png)
+
+BTC was trading at approx 3 standard deviations **below** it's mean (50 day moving average). This turned out to be a great time to buy as just a week later it was trading 27% higher!
+<br></br>
+![](./images/example_mean_reversion_oversold_bounce.png)
+
 <br></br>
 
 # Future Updates
