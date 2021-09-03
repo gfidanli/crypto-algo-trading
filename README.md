@@ -33,7 +33,7 @@ A collection of scripts that combine historical price data from Coinbase Pro wit
 <br/><br/>
 
 # Table of Contents
-
+- [Table of Contents](#table-of-contents)
 - [Installation](#installation)
 - [Usage](#usage)
 - [ETL](#etl)
