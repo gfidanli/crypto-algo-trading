@@ -49,6 +49,8 @@ A collection of scripts that combine historical price data from Coinbase Pro wit
   - [Mean Reversion](#mean-reversion)
     - [How to Use](#how-to-use-1)
     - [Example Results](#example-results-1)
+- [Trading Studies](#trading-studies)
+  - [Day of the Week](#day-of-the-week)
 - [Future Updates](#future-updates)
 - [Resources](#resources)
 
@@ -157,7 +159,15 @@ BTC was trading at approx 3 standard deviations **below** it's mean (50 day movi
 ![](./images/example_mean_reversion_oversold_bounce.png)
 
 <br></br>
+# Trading Studies
+## Day of the Week
+This notebook contains analysis to try to explore (any) relationship between price and days of the week or weekday/weekend splits. 
 
+I would also like to understand if there is any relationship between Monday's Bitcoin peformance and the ultimate performance of the week, where the performance is defined as the percent change between the closing and opening prices of the speciifc timeframe.
+
+If there are any significant findings, it could prove useful for trading purposes.
+
+<br></br>
 # Future Updates
 This project is still very much a work in progress and I will be adding to it over time as I come across new trading strategies/ideas and build out my edge in the markets. I still haven't even touched the social data aspect I was able to grab from the lunarCRUSH API. Stay tuned for that.
 
