@@ -95,7 +95,7 @@ Data quality from the two APIs was very good and there wasn't much data cleaning
 * `datetime.strptime()`: takes a string value and returns a datetime object. The user must define a string format, which in my case was `'%Y-%m-%d'`.
 
 ## Load
-I decided on a SQL database for two reasons:
+I decided on a SQL database for three reasons:
 1. I wanted to practice SQL
 2. I intend for this to be a project I continuously add to and it just seemed unruly to have an ever expanding set of .csv files
 3. SQL is powerful and it would be very easy to manipulate the data to get what I want
