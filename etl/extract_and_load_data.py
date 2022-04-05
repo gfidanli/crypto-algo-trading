@@ -40,7 +40,7 @@ import os
 os.system("mkdir -m 777 db")
 
 # Create connection
-conn = sqlite3.connect('../db/crypto-analysis.db')
+conn = sqlite3.connect('./db/crypto-analysis.db')
 c = conn.cursor()
 
 # Drop Tables
